@@ -83,7 +83,6 @@ namespace eval dotlrn_static {
 	Add the static applet to a dotlrn community
     } {
         set community_type [dotlrn_community::get_community_type_from_community_id $community_id]
-
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
 
         # If i'm in a class, add a portlet called "class (pn) info"
@@ -107,10 +106,8 @@ namespace eval dotlrn_static {
                 -pretty_name "[dotlrn::parameter subcommunities_pretty_name] Info"
             ]
         
-            static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id                
-
+            static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id 
         } else {
-
             set content_id [static_portal_content::new \
                 -package_id $community_id \
                 -content " " \
@@ -118,7 +115,6 @@ namespace eval dotlrn_static {
             ]
         
             static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id
-
         } 
 
         if {[dotlrn_community::dummy_comm_p -community_id $community_id]} {
@@ -127,20 +123,34 @@ namespace eval dotlrn_static {
 
         # the non-member page gets the same static portlet
         set n_p_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
-
         static_portal_content::add_to_portal -content_id $content_id -portal_id $n_p_id
 
         # set up the DS for the admin page
         set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
         static_admin_portlet::add_self_to_page -portal_id $admin_portal_id -package_id $community_id
-
     }
 
-    ad_proc -public remove_applet {
+    ad_proc -public remove_applet_from_community {
 	community_id
+    } {
+	Remove static applet from a dotlrn community
+    } {
+        set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
+        static_admin_portlet::remove_self_from_page -portal_id $admin_portal_id 
+
+        set n_p_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
+        static_portal_content::remove_all_from_portal -portal_id $n_p_id
+        
+        # remove all static content 
+        set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
+        static_portal_content::remove_all_from_portal -portal_id $portal_id
+    }
+
+
+    ad_proc -public remove_applet {
 	package_id
     } {
-	remove the applet from the community
+	remove the applet from dotlrn
     } {
     }
 
