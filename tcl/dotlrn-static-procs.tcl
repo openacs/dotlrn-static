@@ -78,7 +78,53 @@ namespace eval dotlrn_static {
         static_admin_portlet::make_self_available $admin_portal_id
         static_admin_portlet::add_self_to_page $admin_portal_id $instance_id
 
-	# FIXME aks - perms?
+        # If i'm in a class, add a portlet called "class (pn) info"
+        # if I'm in a community, add a portlet called "community (pn) info"
+        # or if I'm in a subcomm, "subcomm (pn) info"
+
+        set community_type \
+                [dotlrn_community::get_community_type_from_community_id $community_id]
+
+        set pt_id [dotlrn_community::get_portal_template_id $community_id]
+
+
+        set class_pn [ad_parameter classes_pretty_name dotlrn]
+        set club_pn [ad_parameter clubs_pretty_name dotlrn]
+        set subg_pn [ad_parameter subcommunities_pretty_name dotlrn]
+
+        if {$community_type == "dotlrn_club"} {
+            set content_id [static_portal_content::new \
+                    -instance_id $instance_id \
+                    -content " " \
+                    -pretty_name "$club_pn Info"
+            ]
+        
+            static_portal_content::add_to_portal \
+                    -content_id $content_id \
+                    -portal_id $pt_id
+    
+        } elseif {$community_type == "dotlrn_community"} {
+            
+            set content_id [static_portal_content::new \
+                    -instance_id $instance_id \
+                    -content " " \
+                    -pretty_name "$subg_pn Info"
+            ]
+        
+            static_portal_content::add_to_portal \
+                    -content_id $content_id \
+                    -portal_id $pt_id                
+        } else {
+            set content_id [static_portal_content::new \
+                    -instance_id $instance_id \
+                    -content " " \
+                    -pretty_name "$class_pn Info"
+            ]
+        
+            static_portal_content::add_to_portal \
+                    -content_id $content_id \
+                    -portal_id $pt_id
+        }
 
 	# return the instance_id
 	return $instance_id
