@@ -66,7 +66,7 @@ namespace eval dotlrn_static {
                 -pretty_name [get_pretty_name]
         }
 
-        dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key]
+        dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
     }
 
     ad_proc -public remove_applet {
