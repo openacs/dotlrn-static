@@ -186,24 +186,33 @@ namespace eval dotlrn_static {
             return
         } elseif {[string equal $type "dotlrn_club"]} {
             # for clubs
+            # Used by en_US messages below
+            set clubs_pretty_name [dotlrn::parameter -name clubs_pretty_name]
+            set pretty_name [_ dotlrn-static.community_info_portlet_pretty_name]
             set content_id [static_portal_content::new \
                                 -package_id $package_id \
-                                -content "[dotlrn::parameter -name clubs_pretty_name] Info" \
-                                -pretty_name "[dotlrn::parameter -name clubs_pretty_name] Info"
+                                -content "$pretty_name" \
+                                -pretty_name "$pretty_name"
             ]
         } elseif {[string equal $type "dotlrn_community"]} {
             # for subgroups
+            # Used by en_US messages below
+            set subcommunities_pretty_name [dotlrn::parameter -name subcommunities_pretty_name]
+            set pretty_name [_ dotlrn-static.subcommunity_info_portlet_pretty_name]
             set content_id [static_portal_content::new \
                                 -package_id $package_id \
-                                -content  "[dotlrn::parameter -name subcommunities_pretty_name] Info" \
-                                -pretty_name "[dotlrn::parameter -name subcommunities_pretty_name] Info"
+                                -content  "$pretty_name" \
+                                -pretty_name "$pretty_name"
             ]            
         } else {
             # for class instances
+            # Used by en_US messages below
+            set class_instances_pretty_name [dotlrn::parameter -name class_instances_pretty_name]
+            set pretty_name [_ dotlrn-static.class_info_portlet_pretty_name]
             set content_id [static_portal_content::new \
                 -package_id $package_id \
-                -content "[dotlrn::parameter -name class_instances_pretty_name] Info" \
-                -pretty_name "[dotlrn::parameter -name class_instances_pretty_name] Info"
+                -content "$pretty_name" \
+                -pretty_name "$pretty_name"
             ]
         }
 
