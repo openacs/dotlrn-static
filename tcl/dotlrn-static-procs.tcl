@@ -97,7 +97,7 @@ namespace eval dotlrn_static {
         set pt_id [dotlrn_community::get_portal_template_id $community_id]
 
 
-        set class_pn [ad_parameter classes_pretty_name dotlrn]
+        set class_pn [ad_parameter class_instances_pretty_name dotlrn]
         set club_pn [ad_parameter clubs_pretty_name dotlrn]
         set subg_pn [ad_parameter subcommunities_pretty_name dotlrn]
 
