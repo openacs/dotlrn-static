@@ -14,20 +14,12 @@
 #  details.
 #
 
-#
-# Procs for DOTLRN static Applet
-# Copyright 2001 OpenForce, inc.
-# Distributed under the GNU GPL v2
-#
-# arjun@openforce.net
-#
-# $Id$
-
 ad_library {
     
     Procs for the dotLRN Static applet
     
     @author arjun@openforce.net
+    @version $Id$
 }
 
 namespace eval dotlrn_static {
@@ -38,7 +30,7 @@ namespace eval dotlrn_static {
     }
 
     ad_proc -public applet_key {} {
-	get the applet key
+        What's my key?
     } {
 	return "dotlrn_static"
     }
@@ -59,7 +51,7 @@ namespace eval dotlrn_static {
     } {
 	returns the pretty name
     } {
-	return "dotLRN static data"
+	return "Static (HTML) Data"
     }
 
     ad_proc -public add_applet {
@@ -68,7 +60,7 @@ namespace eval dotlrn_static {
 	Must be repeatable!
     } {
         # FIXME: won't work with multiple dotlrn instances
-        # aks - trying one mounting of static under /dotlrn (like calendar)
+        # one mounting of static under /dotlrn (like calendar)
         # Use the package_key for the -url param - "/" are not allowed!
         if {![dotlrn::is_package_mounted -package_key [my_package_key]]} {
             dotlrn_applet::mount  -package_key [package_key]
@@ -77,57 +69,49 @@ namespace eval dotlrn_static {
         dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key]
     }
 
+    ad_proc -public remove_applet {
+	package_id
+    } {
+	remove the applet from dotlrn
+    } {
+        ad_return_complaint 1 "[applet_key] remove_applet not implimented!"
+    }
+
     ad_proc -public add_applet_to_community {
 	community_id
     } {
 	Add the static applet to a dotlrn community
     } {
-        set community_type [dotlrn_community::get_community_type_from_community_id $community_id]
-        set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
-
-        # If i'm in a class, add a portlet called "class (pn) info"
-        # if I'm in a community, add a portlet called "community (pn) info"
-        # or if I'm in a subcomm, "subcomm (pn) info"
-        if {$community_type == "dotlrn_club"} {
-
-            set content_id [static_portal_content::new \
-                    -package_id $community_id \
-                    -content " " \
-                    -pretty_name "[parameter::get -parameter clubs_pretty_name] Info"
-            ]
-        
-            static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id
-    
-        } elseif {$community_type == "dotlrn_community"} {
-
-            set content_id [static_portal_content::new \
-                -package_id $community_id \
-                -content " " \
-                -pretty_name "[parameter::get -parameter subcommunities_pretty_name] Info"
-            ]
-        
-            static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id 
-        } else {
-            set content_id [static_portal_content::new \
-                -package_id $community_id \
-                -content " " \
-                -pretty_name "[parameter::get -parameter class_instances_pretty_name] Info"
-            ]
-        
-            static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id
-        } 
-
-        if {[dotlrn_community::dummy_comm_p -community_id $community_id]} {
-            return
-        }
-
-        # the non-member page gets the same static portlet
-        set n_p_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
-        static_portal_content::add_to_portal -content_id $content_id -portal_id $n_p_id
-
-        # set up the DS for the admin page
+        # set up admin portlet
         set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
-        static_admin_portlet::add_self_to_page -portal_id $admin_portal_id -package_id $community_id
+        static_admin_portlet::add_self_to_page \
+            -portal_id $admin_portal_id \
+            -package_id $community_id
+
+        set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
+        set args [ns_set create]
+        ns_set put $args "package_id" $community_id
+        ns_set put $args "template_id" [portal::get_portal_template_id $portal_id]
+
+        set new_content_id [add_portlet_helper $portal_id $args]
+
+        # the non-member portal uses the returned content_id from
+        # the main page above to create a linked static portlet
+        set n_p_id [dotlrn_community::get_non_member_portal_id \
+                        -community_id $community_id]
+
+        # clear the template_id
+        ns_set update $args "template_id" ""
+        ns_set put $args "content_id" $new_content_id
+
+        add_portlet_helper $n_p_id $args
+
+        # replace the existing content with the community's description
+        static_portal_content::update \
+            -content_id $new_content_id \
+            -content [dotlrn_community::get_community_description \
+                          -community_id $community_id] \
+            -pretty_name [static_portal_content::get_pretty_name -content_id $new_content_id]
     }
 
     ad_proc -public remove_applet_from_community {
@@ -135,39 +119,22 @@ namespace eval dotlrn_static {
     } {
 	Remove static applet from a dotlrn community
     } {
-        set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
-        static_admin_portlet::remove_self_from_page -portal_id $admin_portal_id 
-
-        set n_p_id [dotlrn_community::get_non_member_portal_id -community_id $community_id]
-        static_portal_content::remove_all_from_portal -portal_id $n_p_id
-        
-        # remove all static content 
-        set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
-        static_portal_content::remove_all_from_portal -portal_id $portal_id
-    }
-
-
-    ad_proc -public remove_applet {
-	package_id
-    } {
-	remove the applet from dotlrn
-    } {
+        ad_return_complaint 1 "[applet_key] remove_applet not implimented!"
     }
 
     ad_proc -public add_user {
 	community_id
     } {
 	Called when the user is initially added as a dotlrn user.
-	For one-time init stuff
-	
     } {
-	
+	# noop
     }
 
     ad_proc -public remove_user {
         user_id
     } {
     } {
+	# noop
     }
 
     ad_proc -public add_user_to_community {
@@ -176,6 +143,7 @@ namespace eval dotlrn_static {
     } {
 	Add a user to a specific dotlrn community
     } {
+	# noop
     }
 
     ad_proc -public remove_user_from_community {
@@ -185,18 +153,62 @@ namespace eval dotlrn_static {
 	Remove a user from a community. Since this applet is not shown 
         on a user's portal, no action is required here.
     } {
+	# noop
     }
 
     ad_proc -public add_portlet {
-        args
+        portal_id
     } {
         A helper proc to add the underlying portlet to the given portal. 
         
-        @param args a list-ified array of args defined in add_applet_to_community
+        @portal_id
     } {
-        ns_log notice "** Error in [get_pretty_name]: 'add_portlet' not implemented!"
-        ad_return_complaint 1  "Please notifiy the administrator of this error:
-        ** Error in [get_pretty_name]: 'add_portlet' not implemented!"
+        set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
+        set package_id 0
+        
+        if {[string equal $type "user"]} {
+            # do nothing for the user portal template
+            return
+        } elseif {[string equal $type "dotlrn_club"]} {
+            # for clubs
+            set content_id [static_portal_content::new \
+                                -package_id $package_id \
+                                -content "[dotlrn::parameter -name clubs_pretty_name] Info" \
+                                -pretty_name "[dotlrn::parameter -name clubs_pretty_name] Info"
+            ]
+        } elseif {[string equal $type "dotlrn_community"]} {
+            # for subgroups
+            set content_id [static_portal_content::new \
+                                -package_id $package_id \
+                                -content  "[dotlrn::parameter -name subcommunities_pretty_name] Info" \
+                                -pretty_name "[dotlrn::parameter -name subcommunities_pretty_name] Info"
+            ]            
+        } else {
+            # for class instances
+            set content_id [static_portal_content::new \
+                -package_id $package_id \
+                -content "[dotlrn::parameter -name class_instances_pretty_name] Info" \
+                -pretty_name "[dotlrn::parameter -name class_instances_pretty_name] Info"
+            ]
+        }
+
+        set args [ns_set create]
+        ns_set put $args package_id $package_id
+        ns_set put $args content_id $content_id
+
+        add_portlet_helper $portal_id $args
+    }
+
+    ad_proc -public add_portlet_helper {
+        portal_id
+        args
+    } {
+    } {
+        return [static_portal_content::add_to_portal \
+                    -portal_id $portal_id \
+                    -package_id [ns_set get $args "package_id"] \
+                    -content_id [ns_set get $args "content_id"] \
+                    -template_id [ns_set get $args "template_id"]]
     }
 
     ad_proc -public remove_portlet {
@@ -206,9 +218,7 @@ namespace eval dotlrn_static {
         
         @param args a list-ified array of args defined in remove_applet_from_community
     } {
-        ns_log notice "** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
-        ad_return_complaint 1  "Please notifiy the administrator of this error:
-        ** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
+        ad_return_complaint 1 "[applet_key] remove_portlet not implimented!"
     }
 
     ad_proc -public clone {
@@ -218,8 +228,6 @@ namespace eval dotlrn_static {
         Clone this applet's content from the old community to the new one
     } {
         ns_log notice "** Error in [get_pretty_name] 'clone' not implemented!"
-        ad_return_complaint 1  "Please notifiy the administrator of this error:
-        ** Error in [get_pretty_name]: 'clone' not implemented!"
     }
 
 }
