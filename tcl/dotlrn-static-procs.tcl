@@ -65,6 +65,7 @@ namespace eval dotlrn_static {
 	Add the static applet to dotlrn - for one-time init
 	Must be repeatable!
     } {
+
         if {![dotlrn_applet::applet_exists_p -applet_key [applet_key]]} {
 
             db_transaction {
@@ -94,6 +95,7 @@ namespace eval dotlrn_static {
     } {
 	Add the static applet to a dotlrn community
     } {
+
         # set up admin portlet
         set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
         static_admin_portlet::add_self_to_page \
@@ -101,12 +103,21 @@ namespace eval dotlrn_static {
             -package_id $community_id
 
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
+
         set args [ns_set create]
-        ns_set put $args "package_id" $community_id
-        ns_set put $args "template_id" [portal::get_portal_template_id $portal_id]
 
+	set template_id [portal::get_portal_template_id $portal_id]
+	
+	if {[empty_string_p $template_id]} {
+	   
+	    set template_id $portal_id
+	}
+	    
+	ns_set put $args "package_id" $community_id
+        ns_set put $args "template_id" $template_id
+	       
         set new_content_id [add_portlet_helper $portal_id $args]
-
+	
         # the non-member portal uses the returned content_id from
         # the main page above to create a linked static portlet
         set n_p_id [dotlrn_community::get_non_member_portal_id \
@@ -228,7 +239,8 @@ namespace eval dotlrn_static {
         args
     } {
     } {
-        return [static_portal_content::add_to_portal \
+
+	return [static_portal_content::add_to_portal \
                     -portal_id $portal_id \
                     -package_id [ns_set get $args "package_id"] \
                     -content_id [ns_set get $args "content_id"] \
