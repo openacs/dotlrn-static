@@ -57,7 +57,7 @@ namespace eval dotlrn_static {
     ad_proc -private pretty_name_key {
 
     } {
-        return "#dotlrn-static.Static_HTML_Data#"
+        return "dotlrn-static.Static_HTML_Data"
     }
 
     ad_proc -public add_applet {
@@ -71,7 +71,7 @@ namespace eval dotlrn_static {
                 dotlrn_applet::mount \
                     -package_key [package_key] \
                     -url [package_key] \
-                    -pretty_name [pretty_name_key]
+                    -pretty_name "#[pretty_name_key]#"
 
                 dotlrn_applet::add_applet_to_dotlrn \
                     -applet_key [applet_key] \
