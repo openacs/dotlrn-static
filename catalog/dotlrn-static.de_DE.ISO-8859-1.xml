@@ -4,5 +4,5 @@
   <msg key="class_info_portlet_pretty_name">%class_instances_pretty_name%-Information</msg>
   <msg key="community_info_portlet_pretty_name">%clubs_pretty_name%-Information </msg>
   <msg key="Static_HTML_Data">Statische HTML-Daten</msg>
-  <msg key="subcommunity_info_portlet_pretty_name">%subcommunities_pretty_name%-Info</msg>
+  <msg key="subcommunity_info_portlet_pretty_name">%subcommunities_pretty_name%-Information</msg>
 </message_catalog>
