@@ -51,7 +51,7 @@ namespace eval dotlrn_static {
 	Add the static applet to dotlrn - for one-time init
 	Must be repeatable!
     } {
-        dotlrn_community::add_applet_to_dotlrn \
+        dotlrn_applet::add_applet_to_dotlrn \
                 -applet_key [applet_key]
     }
 
