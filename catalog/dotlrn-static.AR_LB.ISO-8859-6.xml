@@ -1,8 +1,0 @@
-<?xml version="?.?"?>
-<message_catalog package_key="dotlrn-static" package_version="?.?a" locale="AR_LB" charset="ISO-????-?">
-
-  <msg key="class_info_portlet_pretty_name">еўдие«  %class_instances_pretty_name%</msg>
-  <msg key="community_info_portlet_pretty_name">еўдие«  %clubs_pretty_name%</msg>
-  <msg key="Static_HTML_Data">»к«ж«  (≈ ‘  к ≈е ≈д) «де” в—…</msg>
-  <msg key="subcommunity_info_portlet_pretty_name">еўдие«  %subcommunities_pretty_name%</msg>
-</message_catalog>
