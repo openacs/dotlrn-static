@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2001, 2002 OpenForce, Inc.
+--  Copyright (C) 2001, 2002 MIT
 --
 --  This file is part of dotLRN.
 --
@@ -16,9 +16,6 @@
 
 --
 -- The dotlrn applet for the STATIC data portlet
--- copyright 2001, OpenForce
--- distributed under GPL v2.0
---
 --
 -- arjun@openforce.net
 --
