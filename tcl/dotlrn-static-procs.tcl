@@ -67,6 +67,13 @@ namespace eval dotlrn_static {
 	Add the static applet to dotlrn - for one-time init
 	Must be repeatable!
     } {
+        # FIXME: won't work with multiple dotlrn instances
+        # aks - trying one mounting of static under /dotlrn (like calendar)
+        # Use the package_key for the -url param - "/" are not allowed!
+        if {![dotlrn::is_package_mounted -package_key [my_package_key]]} {
+            dotlrn_applet::mount  -package_key [package_key]
+        }
+
         dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key]
     }
 
@@ -75,52 +82,21 @@ namespace eval dotlrn_static {
     } {
 	Add the static applet to a dotlrn community
     } {
-	# Create and Mount myself at /static under the community
-	set instance_id [dotlrn::instantiate_and_mount \
-                -mount_point "static" $community_id [package_key]]
-
-        # aks: comment out this until we figure out what to do with the non-members static portlet
-
-        # we add a special static pe to the non-memebers page 
-##        # with the comm info as the content called "$comm_name Info"
-##        set comm_name [dotlrn_community::get_community_name $community_id]
-##        set n_p_id [dotlrn_community::get_community_non_members_portal_id $community_id]
-##
-##        set content_id [static_portal_content::new \
-##                -instance_id $instance_id \
-##                -content "[dotlrn_community::get_community_description $community_id] " \
-##                -pretty_name "$comm_name Info"
-##        ]
-##
-##        static_portal_content::add_to_portal \
-##                -content_id $content_id \
-##                -portal_id $n_p_id
-##        
-
-        # set up the DS for the admin page
-        set admin_portal_id \
-                [dotlrn_community::get_community_admin_portal_id $community_id]
-        static_admin_portlet::make_self_available $admin_portal_id
-        static_admin_portlet::add_self_to_page $admin_portal_id $instance_id
-
-        # If i'm in a class, add a portlet called "class (pn) info"
-        # if I'm in a community, add a portlet called "community (pn) info"
-        # or if I'm in a subcomm, "subcomm (pn) info"
         set community_type \
                 [dotlrn_community::get_community_type_from_community_id $community_id]
 
         set pt_id [dotlrn_community::get_portal_template_id $community_id]
 
+        ns_log notice "aks7: $pt_id"
 
-        set class_pn [ad_parameter class_instances_pretty_name dotlrn]
-        set club_pn [ad_parameter clubs_pretty_name dotlrn]
-        set subg_pn [ad_parameter subcommunities_pretty_name dotlrn]
-
+        # If i'm in a class, add a portlet called "class (pn) info"
+        # if I'm in a community, add a portlet called "community (pn) info"
+        # or if I'm in a subcomm, "subcomm (pn) info"
         if {$community_type == "dotlrn_club"} {
             set content_id [static_portal_content::new \
-                    -instance_id $instance_id \
+                    -instance_id $community_id \
                     -content " " \
-                    -pretty_name "$club_pn Info"
+                    -pretty_name "[dotlrn::parameter clubs_pretty_name] Info"
             ]
         
             static_portal_content::add_to_portal \
@@ -130,9 +106,9 @@ namespace eval dotlrn_static {
         } elseif {$community_type == "dotlrn_community"} {
 
             set content_id [static_portal_content::new \
-                    -instance_id $instance_id \
+                    -instance_id $community_id \
                     -content " " \
-                    -pretty_name "$subg_pn Info"
+                    -pretty_name "[dotlrn::parameter subcommunities_pretty_name] Info"
             ]
         
             static_portal_content::add_to_portal \
@@ -140,18 +116,33 @@ namespace eval dotlrn_static {
                     -portal_id $pt_id                
         } else {
             set content_id [static_portal_content::new \
-                    -instance_id $instance_id \
+                    -instance_id $community_id \
                     -content " " \
-                    -pretty_name "$class_pn Info"
+                    -pretty_name "[dotlrn::parameter class_instances_pretty_name] Info"
             ]
         
             static_portal_content::add_to_portal \
                     -content_id $content_id \
                     -portal_id $pt_id
+        } 
+
+        if {[dotlrn_community::dummy_comm_p -community_id $community_id]} {
+            return
         }
 
-	# return the instance_id
-	return $instance_id
+        # the non-member page gets the same static portlet
+        set n_p_id [dotlrn_community::get_community_non_members_portal_id $community_id]
+
+        static_portal_content::add_to_portal \
+                -content_id $content_id \
+                -portal_id $n_p_id
+
+        # set up the DS for the admin page
+        set admin_portal_id \
+                [dotlrn_community::get_community_admin_portal_id $community_id]
+        static_admin_portlet::make_self_available $admin_portal_id
+        static_admin_portlet::add_self_to_page $admin_portal_id $community_id
+
     }
 
     ad_proc -public remove_applet {
