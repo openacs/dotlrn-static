@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <message_catalog package_key="dotlrn-static" package_version="0.1a" locale="nl_NL" charset="ISO-8859-1">
 
-  <msg key="class_info_portlet_pretty_name">Over %class_instances_pretty_name%</msg>
-  <msg key="community_info_portlet_pretty_name">Over %clubs_pretty_name%</msg>
+  <msg key="class_info_portlet_pretty_name">Over Vak</msg>
+  <msg key="community_info_portlet_pretty_name">Over Vereniging</msg>
   <msg key="Static_HTML_Data">Statische data (HTML)</msg>
-  <msg key="subcommunity_info_portlet_pretty_name">Over %subcommunities_pretty_name%</msg>
+  <msg key="subcommunity_info_portlet_pretty_name">Over Subgroep</msg>
 </message_catalog>
