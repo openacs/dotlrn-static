@@ -64,12 +64,13 @@ namespace eval dotlrn_static {
 	set instance_id [dotlrn::instantiate_and_mount \
                 -mount_point "static" $community_id [package_key]]
 
-	# get the portal_template_id by callback
-	set pt_id [dotlrn_community::get_portal_template_id $community_id]
+        # We don't want to add a portlet until one is created by the static portlet admin (ben)
+#  	# get the portal_template_id by callback
+#  	set pt_id [dotlrn_community::get_portal_template_id $community_id]
 
-	# set up the DS for the portal template
-	static_portlet::make_self_available $pt_id
-	static_portlet::add_self_to_page $pt_id $instance_id
+#  	# set up the DS for the portal template
+#  	static_portlet::make_self_available $pt_id
+#  	static_portlet::add_self_to_page $pt_id $instance_id
 
         # set up the DS for the admin page
         set admin_portal_id \
@@ -110,23 +111,9 @@ namespace eval dotlrn_static {
     } {
 	Add a user to a specific dotlrn community
     } {
-	# Get the portal_id by callback
-	set portal_id \
-                [dotlrn_community::get_portal_id $community_id $user_id]
-	
-	# Get the package_id by callback
-	set package_id \
-                [dotlrn_community::get_applet_package_id \
-                $community_id \
-                [applet_key]]
-
-	# Make static DS available to this page
-	static_portlet::make_self_available $portal_id
-
-	# Call the portal element to be added correctly
-	static_portlet::add_self_to_page $portal_id $package_id
-
-        # don't muck with the user workspace page for now
+        # This needs to loop through all content items for this community
+        # and add them to the user's portlet
+        # FIXME
     }
 
     ad_proc -public remove_user {
@@ -135,22 +122,7 @@ namespace eval dotlrn_static {
     } {
 	Remove a user from a community
     } {
-	# Get the portal_id
-	set portal_id \
-                [dotlrn_community::get_portal_id $community_id $user_id]
-	
-	# Get the package_id by callback
-	set package_id \
-                [dotlrn_community::get_applet_package_id \
-                $community_id \
-                [applet_key]]
-
-	# Remove the portal element
-	static_portlet::remove_self_from_page $portal_id $package_id
-
-	# Buh Bye.
-	static_portlet::make_self_unavailable $portal_id
-
-	# perms? wsp?
+        # Remove all static_portlet instances from the user-community portal
+        # FIXME
     }
 }
