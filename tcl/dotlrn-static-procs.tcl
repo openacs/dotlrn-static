@@ -227,7 +227,11 @@ namespace eval dotlrn_static {
     } {
         Clone this applet's content from the old community to the new one
     } {
-        ns_log notice "** Error in [get_pretty_name] 'clone' not implemented!"
+        ns_log notice "Cloning [get_pretty_name]"
+        static_portal_content::clone \
+            -portal_id [dotlrn_community::get_portal_id_not_cached \
+                            -community_id $new_community_id] \
+            -package_id $new_community_id        
     }
 
 }
