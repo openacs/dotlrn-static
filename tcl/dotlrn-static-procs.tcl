@@ -79,24 +79,23 @@ namespace eval dotlrn_static {
 	set instance_id [dotlrn::instantiate_and_mount \
                 -mount_point "static" $community_id [package_key]]
 
+        # aks: comment out this until we figure out what to do with the non-members static portlet
+
         # we add a special static pe to the non-memebers page 
-        # with the comm info as the content called "$comm_name Info"
-        # aks20
-        set comm_name [dotlrn_community::get_community_name $community_id]
-	set n_p_id [dotlrn_community::get_community_non_members_portal_id $community_id]
-
-        set content_id [static_portal_content::new \
-                -instance_id $instance_id \
-                -content "[dotlrn_community::get_community_description $community_id] " \
-                -pretty_name "$comm_name Info"
-        ]
-
-        static_portal_content::add_to_portal \
-                -content_id $content_id \
-                -portal_id $n_p_id
-        
-        # end aks20
-
+##        # with the comm info as the content called "$comm_name Info"
+##        set comm_name [dotlrn_community::get_community_name $community_id]
+##        set n_p_id [dotlrn_community::get_community_non_members_portal_id $community_id]
+##
+##        set content_id [static_portal_content::new \
+##                -instance_id $instance_id \
+##                -content "[dotlrn_community::get_community_description $community_id] " \
+##                -pretty_name "$comm_name Info"
+##        ]
+##
+##        static_portal_content::add_to_portal \
+##                -content_id $content_id \
+##                -portal_id $n_p_id
+##        
 
         # set up the DS for the admin page
         set admin_portal_id \
