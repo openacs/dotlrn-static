@@ -113,11 +113,14 @@ namespace eval dotlrn_static {
         add_portlet_helper $n_p_id $args
 
         # replace the existing content with the community's description
+        # dosen't matter if we use the comm's portal_id or the
+        # non member portal_id here since they point to the same content_id
         static_portal_content::update \
             -content_id $new_content_id \
             -content [dotlrn_community::get_community_description \
                           -community_id $community_id] \
-            -pretty_name [static_portal_content::get_pretty_name -content_id $new_content_id]
+            -pretty_name [static_portal_content::get_pretty_name -content_id $new_content_id] \
+            -portal_id $n_p_id
     }
 
     ad_proc -public remove_applet_from_community {
