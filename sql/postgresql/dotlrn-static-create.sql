@@ -146,6 +146,14 @@ begin
         	''TCL''
     	);
 
+    perform acs_sc_impl_alias__new (
+        ''dotlrn_applet'',
+        ''dotlrn_static'',
+        ''ChangeEventHandler'',
+        ''dotlrn_static::change_event_handler'',
+        ''TCL''
+    );
+
 	-- Add the binding
 	perform acs_sc_binding__new (
 	    	''dotlrn_applet'',

@@ -243,4 +243,14 @@ namespace eval dotlrn_static {
             -package_id $new_community_id        
     }
 
+    ad_proc -public change_event_handler {
+        community_id
+        event
+        old_value
+        new_value
+    } { 
+        listens for the following events: 
+    } { 
+    }   
+
 }
