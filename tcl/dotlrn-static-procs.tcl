@@ -92,7 +92,7 @@ namespace eval dotlrn_static {
         if {$community_type == "dotlrn_club"} {
 
             set content_id [static_portal_content::new \
-                    -instance_id $community_id \
+                    -package_id $community_id \
                     -content " " \
                     -pretty_name "[dotlrn::parameter clubs_pretty_name] Info"
             ]
@@ -102,7 +102,7 @@ namespace eval dotlrn_static {
         } elseif {$community_type == "dotlrn_community"} {
 
             set content_id [static_portal_content::new \
-                -instance_id $community_id \
+                -package_id $community_id \
                 -content " " \
                 -pretty_name "[dotlrn::parameter subcommunities_pretty_name] Info"
             ]
@@ -112,7 +112,7 @@ namespace eval dotlrn_static {
         } else {
 
             set content_id [static_portal_content::new \
-                -instance_id $community_id \
+                -package_id $community_id \
                 -content " " \
                 -pretty_name "[dotlrn::parameter class_instances_pretty_name] Info"
             ]
@@ -132,7 +132,7 @@ namespace eval dotlrn_static {
 
         # set up the DS for the admin page
         set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
-        static_admin_portlet::add_self_to_page $admin_portal_id $community_id
+        static_admin_portlet::add_self_to_page -portal_id $admin_portal_id -package_id $community_id
 
     }
 
