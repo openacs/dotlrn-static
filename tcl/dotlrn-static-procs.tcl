@@ -51,7 +51,13 @@ namespace eval dotlrn_static {
     } {
 	returns the pretty name
     } {
-	return "Static (HTML) Data"
+	return "[_ [pretty_name_key]]"
+    }
+
+    ad_proc -private pretty_name_key {
+
+    } {
+        return "#dotlrn-static.Static_HTML_Data#"
     }
 
     ad_proc -public add_applet {
@@ -65,7 +71,7 @@ namespace eval dotlrn_static {
                 dotlrn_applet::mount \
                     -package_key [package_key] \
                     -url [package_key] \
-                    -pretty_name [get_pretty_name]
+                    -pretty_name [pretty_name_key]
 
                 dotlrn_applet::add_applet_to_dotlrn \
                     -applet_key [applet_key] \
@@ -252,5 +258,4 @@ namespace eval dotlrn_static {
         listens for the following events: 
     } { 
     }   
-
 }
