@@ -188,7 +188,7 @@ namespace eval dotlrn_static {
             # for clubs
             # Used by en_US messages below
             set clubs_pretty_name [dotlrn::parameter -name clubs_pretty_name]
-            set pretty_name [_ dotlrn-static.community_info_portlet_pretty_name]
+            set pretty_name "#dotlrn-static.community_info_portlet_pretty_name#"
             set content_id [static_portal_content::new \
                                 -package_id $package_id \
                                 -content "$pretty_name" \
@@ -198,7 +198,7 @@ namespace eval dotlrn_static {
             # for subgroups
             # Used by en_US messages below
             set subcommunities_pretty_name [dotlrn::parameter -name subcommunities_pretty_name]
-            set pretty_name [_ dotlrn-static.subcommunity_info_portlet_pretty_name]
+            set pretty_name "#dotlrn-static.subcommunity_info_portlet_pretty_name#"
             set content_id [static_portal_content::new \
                                 -package_id $package_id \
                                 -content  "$pretty_name" \
@@ -208,7 +208,7 @@ namespace eval dotlrn_static {
             # for class instances
             # Used by en_US messages below
             set class_instances_pretty_name [dotlrn::parameter -name class_instances_pretty_name]
-            set pretty_name [_ dotlrn-static.class_info_portlet_pretty_name]
+            set pretty_name "#dotlrn-static.class_info_portlet_pretty_name#"
             set content_id [static_portal_content::new \
                 -package_id $package_id \
                 -content "$pretty_name" \
