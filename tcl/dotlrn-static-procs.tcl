@@ -93,7 +93,7 @@ namespace eval dotlrn_static {
             set content_id [static_portal_content::new \
                     -package_id $community_id \
                     -content " " \
-                    -pretty_name "[dotlrn::parameter clubs_pretty_name] Info"
+                    -pretty_name "[parameter::get -parameter clubs_pretty_name] Info"
             ]
         
             static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id
@@ -103,7 +103,7 @@ namespace eval dotlrn_static {
             set content_id [static_portal_content::new \
                 -package_id $community_id \
                 -content " " \
-                -pretty_name "[dotlrn::parameter subcommunities_pretty_name] Info"
+                -pretty_name "[parameter::get -parameter subcommunities_pretty_name] Info"
             ]
         
             static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id 
@@ -111,7 +111,7 @@ namespace eval dotlrn_static {
             set content_id [static_portal_content::new \
                 -package_id $community_id \
                 -content " " \
-                -pretty_name "[dotlrn::parameter class_instances_pretty_name] Info"
+                -pretty_name "[parameter::get -parameter class_instances_pretty_name] Info"
             ]
         
             static_portal_content::add_to_portal -content_id $content_id -portal_id $portal_id
