@@ -132,7 +132,6 @@ namespace eval dotlrn_static {
 
         # set up the DS for the admin page
         set admin_portal_id [dotlrn_community::get_admin_portal_id -community_id $community_id]
-        static_admin_portlet::make_self_available $admin_portal_id
         static_admin_portlet::add_self_to_page $admin_portal_id $community_id
 
     }
