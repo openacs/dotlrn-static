@@ -63,13 +63,24 @@ namespace eval dotlrn_static {
 	set instance_id [dotlrn::instantiate_and_mount \
                 -mount_point "static" $community_id [package_key]]
 
-        # We don't want to add a portlet until one is created by the static portlet admin (ben)
-#  	# get the portal_template_id by callback
-#  	set pt_id [dotlrn_community::get_portal_template_id $community_id]
+        # we add a special static pe to the non-memebers page 
+        # with the comm info as the content called "$comm_name Info"
+        # aks20
+        set comm_name [dotlrn_community::get_community_name $community_id]
+	set n_p_id [dotlrn_community::get_community_non_members_portal_id $community_id]
 
-#  	# set up the DS for the portal template
-#  	static_portlet::make_self_available $pt_id
-#  	static_portlet::add_self_to_page $pt_id $instance_id
+        set content_id [static_portal_content::new \
+                -instance_id $instance_id \
+                -content "[dotlrn_community::get_community_description $community_id] " \
+                -pretty_name "$comm_name Info"
+        ]
+
+        static_portal_content::add_to_portal \
+                -content_id $content_id \
+                -portal_id $n_p_id
+        
+        # end aks20
+
 
         # set up the DS for the admin page
         set admin_portal_id \
@@ -80,7 +91,6 @@ namespace eval dotlrn_static {
         # If i'm in a class, add a portlet called "class (pn) info"
         # if I'm in a community, add a portlet called "community (pn) info"
         # or if I'm in a subcomm, "subcomm (pn) info"
-
         set community_type \
                 [dotlrn_community::get_community_type_from_community_id $community_id]
 
@@ -103,7 +113,7 @@ namespace eval dotlrn_static {
                     -portal_id $pt_id
     
         } elseif {$community_type == "dotlrn_community"} {
-            
+
             set content_id [static_portal_content::new \
                     -instance_id $instance_id \
                     -content " " \
