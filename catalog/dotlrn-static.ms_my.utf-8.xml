@@ -3,6 +3,6 @@
 
   <msg key="class_info_portlet_pretty_name">Maklumat %class_instances_pretty_name%</msg>
   <msg key="community_info_portlet_pretty_name">Maklumat %clubs_pretty_name%</msg>
-  <msg key="Static_HTML_Data">Data Kekal (HTML)</msg>
+  <msg key="Static_HTML_Data">Data (HTML) Statik</msg>
   <msg key="subcommunity_info_portlet_pretty_name">Maklumat %subcommunities_pretty_name%</msg>
 </message_catalog>
