@@ -21,6 +21,8 @@
 
         <files>
             <file type="package_spec" path="dotlrn-static.info"/>
+            <file type="data_model_create" db_type="oracle" path="sql/oracle/dotlrn-static-create.sql"/>
+            <file type="tcl_procs" path="tcl/dotlrn-static-procs.tcl"/>
         </files>
         <parameters>
         <!-- No version parameters -->

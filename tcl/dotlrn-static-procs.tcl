@@ -118,7 +118,7 @@ namespace eval dotlrn_static {
 	set package_id \
                 [dotlrn_community::get_applet_package_id \
                 $community_id \
-                [applet_key]
+                [applet_key]]
 
 	# Make static DS available to this page
 	static_portlet::make_self_available $portal_id
