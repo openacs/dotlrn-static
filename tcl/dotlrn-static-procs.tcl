@@ -59,11 +59,11 @@ namespace eval dotlrn_static {
 	Add the static applet to dotlrn - for one-time init
 	Must be repeatable!
     } {
-        # FIXME: won't work with multiple dotlrn instances
-        # one mounting of static under /dotlrn (like calendar)
-        # Use the package_key for the -url param - "/" are not allowed!
-        if {![dotlrn::is_package_mounted -package_key [my_package_key]]} {
-            dotlrn_applet::mount  -package_key [package_key]
+        if {![dotlrn_applet::is_applet_mounted -url [package_key]]} {
+            dotlrn_applet::mount \
+                -package_key [package_key] \
+                -url [package_key] \
+                -pretty_name [get_pretty_name]
         }
 
         dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key]
