@@ -59,14 +59,20 @@ namespace eval dotlrn_static {
 	Add the static applet to dotlrn - for one-time init
 	Must be repeatable!
     } {
-        if {![dotlrn_applet::is_applet_mounted -url [package_key]]} {
-            dotlrn_applet::mount \
-                -package_key [package_key] \
-                -url [package_key] \
-                -pretty_name [get_pretty_name]
-        }
+        if {![dotlrn_applet::applet_exists_p -applet_key [applet_key]]} {
 
-        dotlrn_applet::add_applet_to_dotlrn -applet_key [applet_key] -package_key [my_package_key]
+            db_transaction {
+                dotlrn_applet::mount \
+                    -package_key [package_key] \
+                    -url [package_key] \
+                    -pretty_name [get_pretty_name]
+
+                dotlrn_applet::add_applet_to_dotlrn \
+                    -applet_key [applet_key] \
+                    -package_key [my_package_key]
+            }
+
+        }
     }
 
     ad_proc -public remove_applet {
