@@ -182,7 +182,8 @@ namespace eval dotlrn_static {
 	community_id
 	user_id
     } {
-	Remove a user from a community
+	Remove a user from a community. Since this applet is not shown 
+        on a user's portal, no action is required here.
     } {
     }
 
