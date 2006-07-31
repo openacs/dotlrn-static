@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="dotlrn-static" package_version="2.2.0a1" locale="it_IT" charset="ISO-8859-1">
+<message_catalog package_key="dotlrn-static" package_version="2.2.0b2" locale="it_IT" charset="ISO-8859-1">
 
   <msg key="class_info_portlet_pretty_name">Informazioni su Classe</msg>
   <msg key="community_info_portlet_pretty_name">Informazioni su Comunità</msg>
