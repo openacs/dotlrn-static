@@ -116,7 +116,11 @@ namespace eval dotlrn_static {
 	ns_set put $args "package_id" $community_id
         ns_set put $args "template_id" $template_id
 	       
-        set new_content_id [add_portlet_helper $portal_id $args]
+	# quit if new_content_id is empty, this means the template
+	# portal does not have custom portlets
+        if { [set new_content_id [add_portlet_helper $portal_id $args]] eq "" } {
+	    return
+	}
 	
         # the non-member portal uses the returned content_id from
         # the main page above to create a linked static portlet
