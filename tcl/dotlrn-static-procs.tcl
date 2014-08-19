@@ -108,7 +108,7 @@ namespace eval dotlrn_static {
 
 	set template_id [portal::get_portal_template_id $portal_id]
 	
-	if {[empty_string_p $template_id]} {
+	if {$template_id eq ""} {
 	   
 	    set template_id $portal_id
 	}
@@ -196,10 +196,10 @@ namespace eval dotlrn_static {
         set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
         set package_id 0
         
-        if {[string equal $type "user"]} {
+        if {$type eq "user"} {
             # do nothing for the user portal template
             return
-        } elseif {[string equal $type "dotlrn_club"]} {
+        } elseif {$type eq "dotlrn_club"} {
             # for clubs
             # Used by en_US messages below
             set clubs_pretty_name [dotlrn::parameter -name clubs_pretty_name]
@@ -209,7 +209,7 @@ namespace eval dotlrn_static {
                                 -content "$pretty_name" \
                                 -pretty_name "$pretty_name"
             ]
-        } elseif {[string equal $type "dotlrn_community"]} {
+        } elseif {$type eq "dotlrn_community"} {
             # for subgroups
             # Used by en_US messages below
             set subcommunities_pretty_name [dotlrn::parameter -name subcommunities_pretty_name]
