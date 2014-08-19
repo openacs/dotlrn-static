@@ -23,13 +23,12 @@
 --
 -- PostGreSQL port samir@symphinity.com 11 July 2002
 --
-create function inline_0()
-returns integer as '
-begin
+CREATE OR REPLACE FUNCTION inline_0() RETURNS integer AS $$
+BEGIN
 
 	perform acs_sc_impl__delete(
-	   ''dotlrn_applet'',		-- impl_contract_name
-     ''dotlrn_static''		-- impl_name
+	   'dotlrn_applet',		-- impl_contract_name
+     'dotlrn_static'		-- impl_name
   );
 
 
@@ -37,103 +36,104 @@ begin
 
 -- GetPrettyName
 	perform  acs_sc_impl_alias__delete (
-	    ''dotlrn_applet'',
-	    ''dotlrn_static'',
-	    ''GetPrettyName''
+	    'dotlrn_applet',
+	    'dotlrn_static',
+	    'GetPrettyName'
  );
 
 
 	-- AddApplet
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''AddApplet''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'AddApplet'
 	);
 
 
 
 	-- RemoveApplet
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''RemoveApplet''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'RemoveApplet'
 	);
 
 	-- AddAppletToCommunity
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''AddAppletToCommunity''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'AddAppletToCommunity'
 	);
 
 
 	-- RemoveAppletFromCommunity
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''RemoveAppletFromCommunity''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'RemoveAppletFromCommunity'
 	);
 
 	-- AddUser
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''AddUser''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'AddUser'
 	);
 
 	-- RemoveUser
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''RemoveUser''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'RemoveUser'
 	);
 
 	-- AddUserToCommunity
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''AddUserToCommunity''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'AddUserToCommunity'
 	);
 
 	-- RemoveUserFromCommunity
 	perform  acs_sc_impl_alias__delete (
-	       ''dotlrn_applet'',
-	       ''dotlrn_static'',
-	       ''RemoveUserFromCommunity''
+	       'dotlrn_applet',
+	       'dotlrn_static',
+	       'RemoveUserFromCommunity'
 	);
 
     -- AddPortlet
 	perform  acs_sc_impl_alias__delete (
-        	''dotlrn_applet'',									-- impl_contract_name
-	        ''dotlrn_static'',									-- impl_name
- 	      	''AddPortlet''  										-- impl_operation_name
+        	'dotlrn_applet',									-- impl_contract_name
+	        'dotlrn_static',									-- impl_name
+ 	      	'AddPortlet'  										-- impl_operation_name
     	);
 	
     -- RemovePortlet
 	perform  acs_sc_impl_alias__delete (
-     	   	''dotlrn_applet'',
-     	  	''dotlrn_static'',
-       	 	''RemovePortlet''
+     	   	'dotlrn_applet',
+     	  	'dotlrn_static',
+       	 	'RemovePortlet'
     );
 
     -- Clone
 	perform  acs_sc_impl_alias__delete (
-        	''dotlrn_applet'',
-        	''dotlrn_static'',
-        	''Clone''
+        	'dotlrn_applet',
+        	'dotlrn_static',
+        	'Clone'
     	);
 
 
 	-- Remove the binding
 	perform acs_sc_binding__delete (
-	    ''dotlrn_applet'',
-	    ''dotlrn_static''
+	    'dotlrn_applet',
+	    'dotlrn_static'
 		);
 
-	RAISE NOTICE '' Finished deleting dotlrn-static sc....'';
+	RAISE NOTICE ' Finished deleting dotlrn-static sc....';
 	
 return 0;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select inline_0();
 
