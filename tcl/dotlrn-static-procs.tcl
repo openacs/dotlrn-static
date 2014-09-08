@@ -19,7 +19,7 @@ ad_library {
     Procs for the dotLRN Static applet
     
     @author arjun@openforce.net
-    @version $Id$
+    @cvs-id $Id$
 }
 
 namespace eval dotlrn_static {
