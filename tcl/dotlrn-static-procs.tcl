@@ -134,7 +134,7 @@ namespace eval dotlrn_static {
         add_portlet_helper $n_p_id $args
 
         # replace the existing content with the community's description
-        # dosen't matter if we use the comm's portal_id or the
+        # doesn't matter if we use the comm's portal_id or the
         # non member portal_id here since they point to the same content_id
         static_portal_content::update \
             -content_id $new_content_id \
