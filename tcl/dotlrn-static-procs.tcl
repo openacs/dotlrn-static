@@ -191,7 +191,7 @@ namespace eval dotlrn_static {
     } {
         A helper proc to add the underlying portlet to the given portal. 
         
-        @portal_id
+        @param portal_id
     } {
         set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
         set package_id 0
