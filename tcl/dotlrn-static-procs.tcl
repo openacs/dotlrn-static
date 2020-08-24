@@ -152,7 +152,7 @@ namespace eval dotlrn_static {
         ad_return_complaint 1 "[applet_key] remove_applet not implemented!"
     }
 
-    ad_proc -public add_user {
+    ad_proc -private add_user {
         community_id
     } {
         Called when the user is initially added as a dotlrn user.
@@ -160,14 +160,14 @@ namespace eval dotlrn_static {
         # noop
     }
 
-    ad_proc -public remove_user {
+    ad_proc -private remove_user {
         user_id
     } {
     } {
         # noop
     }
 
-    ad_proc -public add_user_to_community {
+    ad_proc -private add_user_to_community {
         community_id
         user_id
     } {
@@ -176,7 +176,7 @@ namespace eval dotlrn_static {
         # noop
     }
 
-    ad_proc -public remove_user_from_community {
+    ad_proc -private remove_user_from_community {
         community_id
         user_id
     } {
@@ -274,7 +274,7 @@ namespace eval dotlrn_static {
             -package_id $new_community_id
     }
 
-    ad_proc -public change_event_handler {
+    ad_proc -private change_event_handler {
         community_id
         event
         old_value
