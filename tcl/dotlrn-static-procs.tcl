@@ -82,12 +82,16 @@ namespace eval dotlrn_static {
         }
     }
 
-    ad_proc -public remove_applet {
-        package_id
+    ad_proc -public remove_applet {} {
+        Remove the applet from dotlrn
     } {
-        remove the applet from dotlrn
-    } {
-        ad_return_complaint 1 "[applet_key] remove_applet not implemented!"
+        db_transaction {
+            set package_url [site_node::get_package_url -package_key [package_key]]
+            if { $package_url ne "" } {
+                site_node::unmount -node_id [site_node::get_node_id -url $package_url]
+            }
+            dotlrn_applet::remove_applet_from_dotlrn -applet_key [applet_key]
+        }
     }
 
     ad_proc -public add_applet_to_community {
@@ -192,6 +196,7 @@ namespace eval dotlrn_static {
         A helper proc to add the underlying portlet to the given portal.
 
         @param portal_id
+        @return element_id if added to the portal
     } {
         set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
         set package_id 0
@@ -235,13 +240,16 @@ namespace eval dotlrn_static {
         ns_set put $args package_id $package_id
         ns_set put $args content_id $content_id
 
-        add_portlet_helper $portal_id $args
+        return [add_portlet_helper $portal_id $args]
     }
 
     ad_proc -public add_portlet_helper {
         portal_id
         args
     } {
+        @param portal_id
+        @param args
+        @return element_id if added to the portal
     } {
 
         return [static_portal_content::add_to_portal \
@@ -252,13 +260,17 @@ namespace eval dotlrn_static {
     }
 
     ad_proc -public remove_portlet {
+        portal_id
+        element_id
         args
     } {
         A helper proc to remove the underlying portlet from the given portal.
 
+        @param portal_id
+        @param element_id
         @param args a list-ified array of args defined in remove_applet_from_community
     } {
-        ad_return_complaint 1 "[applet_key] remove_portlet not implemented!"
+        static_portlet::remove_self_from_page $portal_id $element_id
     }
 
     ad_proc -public clone {
