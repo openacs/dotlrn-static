@@ -26,6 +26,17 @@ aa_register_case \
 }
 
 aa_register_case -procs {
+        dotlrn_static::get_pretty_name
+    } -cats {
+        api
+        production_safe
+    } dotlrn_static_pretty_name {
+        Test get_pretty_name.
+} {
+    aa_equals "dotlrn-static pretty name" "[dotlrn_static::get_pretty_name]" "[_ [dotlrn_static::pretty_name_key]]"
+}
+
+aa_register_case -procs {
         dotlrn_static::add_applet
         dotlrn_static::add_portlet
         dotlrn_static::add_portlet_helper
