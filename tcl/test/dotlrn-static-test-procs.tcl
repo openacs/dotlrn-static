@@ -78,14 +78,15 @@ aa_register_case -procs {
         set portal_exists_p [db_0or1row foo {
             select * from portals where portal_id=:portal_id
         }]
+        set applet_key [dotlrn_static::applet_key]
         if {$portal_exists_p} {
             aa_log "Portal created (portal_id: $portal_id)"
-            if {[dotlrn_applet::get_applet_id_from_key -applet_key [dotlrn_static::applet_key]] ne ""} {
+            if {[dotlrn_applet::get_applet_id_from_key -applet_key $applet_key] ne ""} {
                 #
                 # Remove the applet in advance, if it already exists
                 #
                 dotlrn_static::remove_applet
-                aa_log "Removed existing applet"
+                aa_true "Removed existing applet" "[expr {[dotlrn_applet::get_applet_id_from_key -applet_key $applet_key] eq ""}]"
             }
             #
             # Create some content
@@ -106,7 +107,7 @@ aa_register_case -procs {
             # Add applet
             #
             dotlrn_static::add_applet
-            aa_true "Add applet" "[expr {[dotlrn_applet::get_applet_id_from_key -applet_key [dotlrn_static::applet_key]] ne ""}]"
+            aa_true "Add applet" "[expr {[dotlrn_applet::get_applet_id_from_key -applet_key $applet_key] ne ""}]"
             #
             # Add portlet to portal
             #
@@ -129,7 +130,7 @@ aa_register_case -procs {
             # Remove applet
             #
             dotlrn_static::remove_applet
-            aa_equals "Remove applet" "[dotlrn_applet::get_applet_id_from_key -applet_key [dotlrn_static::applet_key]]" ""
+            aa_equals "Remove applet" "[dotlrn_applet::get_applet_id_from_key -applet_key $applet_key]" ""
         } else {
             aa_error "Portal creation failed"
         }

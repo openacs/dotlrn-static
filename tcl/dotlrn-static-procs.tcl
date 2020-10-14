@@ -88,7 +88,9 @@ namespace eval dotlrn_static {
         db_transaction {
             set package_url [site_node::get_package_url -package_key [package_key]]
             if { $package_url ne "" } {
-                site_node::unmount -node_id [site_node::get_node_id -url $package_url]
+                set node_id [site_node::get_node_id -url $package_url]
+                site_node::unmount -node_id $node_id
+                site_node::delete -node_id $node_id -delete_subnodes
             }
             dotlrn_applet::remove_applet_from_dotlrn -applet_key [applet_key]
         }
