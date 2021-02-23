@@ -283,7 +283,7 @@ namespace eval dotlrn_static {
     } {
         ns_log notice "Cloning [get_pretty_name]"
         static_portal_content::clone \
-            -portal_id [dotlrn_community::get_portal_id_not_cached \
+            -portal_id [dotlrn_community::get_portal_id \
                             -community_id $new_community_id] \
             -package_id $new_community_id
     }
