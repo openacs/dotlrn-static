@@ -65,20 +65,28 @@ namespace eval dotlrn_static {
         Add the static applet to dotlrn - for one-time init
         Must be repeatable!
     } {
+        set applets_node [site_node::get -url [dotlrn_applet::get_url]/]
+        set applets_node_id [dict get $applets_node node_id]
 
-        if {![dotlrn_applet::applet_exists_p -applet_key [applet_key]]} {
+        set package_key [dotlrn_static::package_key]
 
+        if {![db_0or1row is_mounted {
+            select 1 from site_nodes n, apm_packages p
+            where n.parent_id = :applets_node_id
+            and p.package_id = n.object_id
+            and p.package_key = :package_key
+        }]} {
             db_transaction {
-                dotlrn_applet::mount \
-                    -package_key [package_key] \
-                    -url [package_key] \
-                    -pretty_name "#[pretty_name_key]#"
+                site_node::instantiate_and_mount \
+                    -node_name $package_key \
+                    -parent_node_id $applets_node_id \
+                    -package_key $package_key \
+                    -package_name "#[dotlrn_static::pretty_name_key]#"
 
                 dotlrn_applet::add_applet_to_dotlrn \
                     -applet_key [applet_key] \
                     -package_key [my_package_key]
             }
-
         }
     }
 

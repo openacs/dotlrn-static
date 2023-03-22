@@ -7,6 +7,24 @@ ad_library {
 
 }
 
+aa_register_case -cats {
+    smoke production_safe
+} dotlrn_static_mountpoint {
+    Make sure the applet is mounted correctly
+} {
+    set applets_node [site_node::get -url [dotlrn_applet::get_url]/]
+    set applets_node_id [dict get $applets_node node_id]
+
+    set package_key [dotlrn_static::package_key]
+
+    aa_true "Applet is mounted under /dotlrn/applets" [db_0or1row is_mounted {
+        select 1 from site_nodes n, apm_packages p
+        where n.parent_id = :applets_node_id
+        and p.package_id = n.object_id
+        and p.package_key = :package_key
+    }]
+}
+
 aa_register_case \
     -cats {api smoke production_safe} \
     -procs {
