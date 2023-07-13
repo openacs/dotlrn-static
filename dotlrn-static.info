@@ -7,16 +7,16 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>t</singleton-p>
 
-    <version name="2.10.1" url="http://openacs.org/repository/download/apm/dotlrn-static-2.10.1.apm">
+    <version name="2.10.1b1" url="http://openacs.org/repository/download/apm/dotlrn-static-2.10.1.apm">
         <owner url="http://openacs.org">OpenACS</owner>
          <summary>DotLRN Applet Static Portlets</summary>
-        <release-date>2023-03-22</release-date>
+        <release-date>2023-05-09</release-date>
         <vendor url="http://dotlrn.org">DotLRN Consortium</vendor>
         <maturity>2</maturity>
 
-        <provides url="dotlrn-static" version="2.10.1"/>
-        <requires url="dotlrn" version="2.10.0"/>
-        <requires url="static-portlet" version="2.10.0"/>
+        <provides url="dotlrn-static" version="2.10.1b1"/>
+        <requires url="dotlrn" version="2.10.1b1"/>
+        <requires url="static-portlet" version="2.10.1b1"/>
 
         <callbacks>
             <callback type="after-upgrade"  proc="dotlrn_static::apm::upgrade"/>
