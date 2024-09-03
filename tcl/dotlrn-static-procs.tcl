@@ -65,29 +65,43 @@ namespace eval dotlrn_static {
         Add the static applet to dotlrn - for one-time init
         Must be repeatable!
     } {
+        set applets_node [site_node::get -url [dotlrn_applet::get_url]/]
+        set applets_node_id [dict get $applets_node node_id]
 
-        if {![dotlrn_applet::applet_exists_p -applet_key [applet_key]]} {
+        set package_key [dotlrn_static::package_key]
 
+        if {![db_0or1row is_mounted {
+            select 1 from site_nodes n, apm_packages p
+            where n.parent_id = :applets_node_id
+            and p.package_id = n.object_id
+            and p.package_key = :package_key
+        }]} {
             db_transaction {
-                dotlrn_applet::mount \
-                    -package_key [package_key] \
-                    -url [package_key] \
-                    -pretty_name "#[pretty_name_key]#"
+                site_node::instantiate_and_mount \
+                    -node_name $package_key \
+                    -parent_node_id $applets_node_id \
+                    -package_key $package_key \
+                    -package_name "#[dotlrn_static::pretty_name_key]#"
 
                 dotlrn_applet::add_applet_to_dotlrn \
                     -applet_key [applet_key] \
                     -package_key [my_package_key]
             }
-
         }
     }
 
-    ad_proc -public remove_applet {
-        package_id
+    ad_proc -public remove_applet {} {
+        Remove the applet from dotlrn
     } {
-        remove the applet from dotlrn
-    } {
-        ad_return_complaint 1 "[applet_key] remove_applet not implemented!"
+        db_transaction {
+            set package_url [site_node::get_package_url -package_key [package_key]]
+            if { $package_url ne "" } {
+                set node_id [site_node::get_node_id -url $package_url]
+                site_node::unmount -node_id $node_id
+                site_node::delete -node_id $node_id -delete_subnodes
+            }
+            dotlrn_applet::remove_applet_from_dotlrn -applet_key [applet_key]
+        }
     }
 
     ad_proc -public add_applet_to_community {
@@ -152,7 +166,7 @@ namespace eval dotlrn_static {
         ad_return_complaint 1 "[applet_key] remove_applet not implemented!"
     }
 
-    ad_proc -public add_user {
+    ad_proc -private add_user {
         community_id
     } {
         Called when the user is initially added as a dotlrn user.
@@ -160,14 +174,14 @@ namespace eval dotlrn_static {
         # noop
     }
 
-    ad_proc -public remove_user {
+    ad_proc -private remove_user {
         user_id
     } {
     } {
         # noop
     }
 
-    ad_proc -public add_user_to_community {
+    ad_proc -private add_user_to_community {
         community_id
         user_id
     } {
@@ -176,7 +190,7 @@ namespace eval dotlrn_static {
         # noop
     }
 
-    ad_proc -public remove_user_from_community {
+    ad_proc -private remove_user_from_community {
         community_id
         user_id
     } {
@@ -192,6 +206,7 @@ namespace eval dotlrn_static {
         A helper proc to add the underlying portlet to the given portal.
 
         @param portal_id
+        @return element_id if added to the portal
     } {
         set type [dotlrn::get_type_from_portal_id -portal_id $portal_id]
         set package_id 0
@@ -235,13 +250,16 @@ namespace eval dotlrn_static {
         ns_set put $args package_id $package_id
         ns_set put $args content_id $content_id
 
-        add_portlet_helper $portal_id $args
+        return [add_portlet_helper $portal_id $args]
     }
 
     ad_proc -public add_portlet_helper {
         portal_id
         args
     } {
+        @param portal_id
+        @param args
+        @return element_id if added to the portal
     } {
 
         return [static_portal_content::add_to_portal \
@@ -252,13 +270,17 @@ namespace eval dotlrn_static {
     }
 
     ad_proc -public remove_portlet {
+        portal_id
+        element_id
         args
     } {
         A helper proc to remove the underlying portlet from the given portal.
 
+        @param portal_id
+        @param element_id
         @param args a list-ified array of args defined in remove_applet_from_community
     } {
-        ad_return_complaint 1 "[applet_key] remove_portlet not implemented!"
+        static_portlet::remove_self_from_page $portal_id $element_id
     }
 
     ad_proc -public clone {
@@ -269,12 +291,12 @@ namespace eval dotlrn_static {
     } {
         ns_log notice "Cloning [get_pretty_name]"
         static_portal_content::clone \
-            -portal_id [dotlrn_community::get_portal_id_not_cached \
+            -portal_id [dotlrn_community::get_portal_id \
                             -community_id $new_community_id] \
             -package_id $new_community_id
     }
 
-    ad_proc -public change_event_handler {
+    ad_proc -private change_event_handler {
         community_id
         event
         old_value
